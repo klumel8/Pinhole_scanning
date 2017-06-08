@@ -41,6 +41,7 @@ weight=zeros(ngrid,1);
 tic
 grid = zeros(gridrow,gridcol);
 for i = 1:length(index(:,:,1))
+% NOTE NOTE NOTE zou dit niet |grid(index(i,1,j),index(i,2,j)) =1;| moeten zijn waarin we ook nog eens door j loopen voor elk punt(1 tot Nc)?
     grid(index(i,1,1),index(i,2,1)) =1;
 end
 toc

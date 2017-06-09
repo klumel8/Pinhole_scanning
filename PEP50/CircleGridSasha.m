@@ -47,7 +47,7 @@ linearIndex = reshape(linearIndex,[numberSteps*numberCircles,1]);
 gridcir(linearIndex(:,1))=1;
 %toc
 
-%weight=zeros(ngrid,1);
+%weight=zeros(ngrid,1); %Used in old CircleGrid, but why??
 %{
 tic
 grid = zeros(gridrow,gridcol);

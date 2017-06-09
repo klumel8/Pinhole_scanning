@@ -30,7 +30,8 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %determine the width of the pinholes
     r_pin = hit_pin(6,:);
     %but now in angles.
-    r_pin = atan(r_pin) ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2);
+    r_voxel = 0.1;
+    r_pin = atan(r_voxel + r_pin ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2));
     
     %maak het aantal stappen moet overlegd worden
     steps = max(grid_row,grid_col)*4;

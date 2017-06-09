@@ -1,7 +1,4 @@
-clear all
-
-gridrow = 201; %Number of rows
-gridcol = 400; %Number of colms
+function [gridcir,weight]=CircleGrid(gridrow,gridcol)
 
 rowleng=pi/gridrow; %Height of a row
 colleng=2*pi/gridcol; %Width of a col

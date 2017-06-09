@@ -9,7 +9,7 @@
 
 function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %we nemen de unitsphere als een bol met straal 1mm.
-    %en xyz ook in mm.
+    %en xyz ook in mm. de eerste colom van hit_pin bevat allen de xyz van de geraakte voxel
     
     %determine the xyz coordinates of the voxel being hit
     v = hit_pin_xyz(1:3,1);

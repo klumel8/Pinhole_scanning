@@ -4,12 +4,18 @@
 
 
 % The area checked is a cube with a side 2L
-L_area = 1;
+L_area = 200;
 
 % A voxel is a small cube with a side of length L
-L_voxel = 0.1;
+L_voxel = 20;
 
 number_voxels = (L_area / L_voxel)^3;
 
-% voxel coördinates 
+% voxel coÃ¶rdinates 
 [x_voxel,y_voxel,z_voxel] = Voxel_coordinates(L_area, L_voxel);
+
+% fit the input information in an easy matrix
+pinholes = [x,y,z,phi,theta,d, alpha] ;
+
+%returns a matrix for every voxel which pinhole it sees 
+voxel_pinhole = pinhole_scanning(pinholes, [x_voxel',y_voxel',z_voxel']);

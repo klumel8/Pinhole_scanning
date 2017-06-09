@@ -1,4 +1,4 @@
-function [gridcir,weight]=CircleGridSasha(gridrow,gridcol)
+function [gridcir]=CircleGridSasha(gridrow,gridcol)
 
 rowleng=pi/gridrow; %Height of a row
 colleng=2*pi/gridcol; %Width of a col

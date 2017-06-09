@@ -19,3 +19,8 @@ pinholes = [x,y,z,phi,theta,d, alpha] ;
 
 %returns a matrix for every voxel which pinhole it sees 
 voxel_pinhole = pinhole_scanning(pinholes, [x_voxel',y_voxel',z_voxel']);
+
+gridrow = 11;
+gridcol = 10;
+% Generates the circles on the sphere and puts the coordinates in a grid
+circleGrid = CircleGridSasha(gridrow,gridcol);

@@ -1,8 +1,7 @@
 function [ x,y,z ] = Voxel_coordinates( L_area, L_voxel )
 % Returns the x,y,z coorinates of all the voxels as vectors
 % The input arguments are the size of the area and the voxels
-L_area = 1;
-L_voxel = 0.1;
+
 xt = linspace(-L_area,L_area, L_area/L_voxel);
 yt = linspace(-L_area,L_area, L_area/L_voxel);
 zt = linspace(-L_area,L_area, L_area/L_voxel);

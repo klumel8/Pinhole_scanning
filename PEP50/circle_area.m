@@ -22,7 +22,8 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     end
     
     %here we calculate phi and theta note, phi is the angle with (x,y)
-    phi = atan( hit_pin(2,:) ./ hit_pin(1,:) ) + (hit_pin(1,:) < 0) * pi + pi/2;
+    phi = atan2(hit_pin(2,:), hit_pin(1,:))+ pi;
+    %phi = phi .* (phi >= 0) + (phi + 2 * pi) .* (phi < 0); 
     theta = abs(atan( hit_pin(3,:) ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2))-pi/2);
     
     %now we want to calculate the area on the circle, we do this by
@@ -32,37 +33,35 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     pin_phi = hit_pin(4,:);
     pin_theta = hit_pin(5,:);
     
-    %do somethign artur told me
-    lengte = norm([hit_pin(1,:)  hit_pin(2,:) hit_pin(3,:)]);
-    mess1 = -1 * [hit_pin(1,:)  hit_pin(2,:) hit_pin(3,:)] / lengte;
-    mess2 = [cos(pin_phi).*sin(pin_theta) sin(pin_phi).*sin(pin_theta) cos(pin_theta)];
-    delta = pi/2 - acos(mess1(:,1) .* mess2(:,1) + mess1(:,2) .* mess2(:,2) + mess1(:,3) .* mess2(:,3));
-    
-    %determine the width of the pinholes
-    r_pin = hit_pin(6,:)*5;
-    r_pin = (r_pin * lengte) ./ (lengte + r_pin.*cos(delta));
-    %but now in angles.
-    r_voxel = 0.0;
-    r_pin = atan(r_voxel + r_pin ./ lengte);
+    lengte = sqrt([hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2]);
+    delta_phi   = (phi - pin_phi) - pi;
+    delta_theta = (theta - pin_theta) - pi;
     
     %determine the width of the pinholes
     r_pin = hit_pin(6,:);
-    %but now in angles.
-    r_voxel = 0.0;
-    r_pin = atan(r_voxel + r_pin ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2));
+    r_pin = atan(r_pin./lengte);
     
     %maak het aantal stappen moet overlegd worden
     steps = 100;
     h_step = round(steps/2);
-    gamma = linspace(2*pi/steps, 2*pi, steps);
+    gamma = linspace(2*pi/steps, 2*pi, h_step);
     
     %begin making the area that is been seen by  the pinhole
     area_border = zeros(steps, sz, 2);
     [X,Y] = meshgrid(1:sz,1:h_step);
+    [phi_m,~] = meshgrid(cos(delta_phi),1:h_step);
+    [theta_m,~] = meshgrid(cos(delta_theta),1:h_step);
     area_border(1:h_step,:,2) = phi(X) + cos(gamma(Y)).*r_pin(X);
     area_border(1:h_step,:,1) = theta(X) + sin(gamma(Y)).*r_pin(X);
     area_border(h_step+1:end,:,2) = phi(X) + 0.8*cos(gamma(Y)).*r_pin(X);
     area_border(h_step+1:end,:,1) = theta(X) + 0.8*sin(gamma(Y)).*r_pin(X);
+    
+    %add the scaling factors
+    area_border(1:h_step,:,2) = area_border(1:h_step,:,2).*phi_m;
+    area_border(h_step+1:end,:,2) = area_border(h_step+1:end,:,2).*phi_m;
+    area_border(1:h_step,:,1) = area_border(1:h_step,:,1).*theta_m;
+    area_border(h_step+1:end,:,1) = area_border(h_step+1:end,:,1).*theta_m;
+    
     %{
     for i=1:sz
         for j=1:steps
@@ -88,13 +87,6 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %}
     %now make the border area into a grid matrix;
     border_grid = false(grid_row,grid_col);
-    %border_grid1 = border_grid;
-    %r_phi = ceil(area_border(1:steps,1:sz,2)/2/pi*grid_col);
-    %r_theta = ceil(area_border(1:steps,1:sz,1)/pi*grid_row);
-    %r_theta = reshape(r_theta,1,size(r_theta,1)*size(r_theta,2));
-    %r_phi = reshape(r_phi,1,size(r_phi,1)*size(r_phi,2));
-    %ray = [r_theta; r_phi];
-    %border_grid1(ray) = true;
     for i=1:sz
         for j=1:steps
             r_phi = ceil(area_border(j,i,2)/2/pi*grid_col);
@@ -102,8 +94,6 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
             border_grid(r_theta,r_phi) = true;
         end
     end
-    %isequal(border_grid,border_grid1)
+    isequal(border_grid,border_grid1)
     sphere_area = border_grid;
 end
-
-%d = (pi/2) -acos(-[

@@ -22,7 +22,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     end
     
     %here we calculate phi and theta note, phi is the angle with (x,y)
-    phi = atan( hit_pin(2,:) ./ hit_pin(1,:) ) + (hit_pin(1,:) < 0) .* (hit_pin(2,:) > 0)*pi/2 - (hit_pin(1,:) < 0) .* (hit_pin(2,:) < 0)*pi/2 + pi;
+    phi = atan( hit_pin(2,:) ./ hit_pin(1,:) ) + (hit_pin(1,:) < 0) * pi + pi/2;
     theta = abs(atan( hit_pin(3,:) ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2))-pi/2);
     
     %now we want to calculate the area on the circle, we do this by
@@ -52,7 +52,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     r_pin = atan(r_voxel + r_pin ./ sqrt( hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2));
     
     %maak het aantal stappen moet overlegd worden
-    steps = max(grid_row,grid_col)*4*2;
+    steps = 100;
     h_step = round(steps/2);
     gamma = linspace(2*pi/steps, 2*pi, steps);
     
@@ -61,8 +61,8 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     [X,Y] = meshgrid(1:sz,1:h_step);
     area_border(1:h_step,:,2) = phi(X) + cos(gamma(Y)).*r_pin(X);
     area_border(1:h_step,:,1) = theta(X) + sin(gamma(Y)).*r_pin(X);
-    area_border(h_step+1:end,:,2) = phi(X) + cos(gamma(Y)).*r_pin(X);
-    area_border(h_step+1:end,:,1) = theta(X) + sin(gamma(Y)).*r_pin(X);
+    area_border(h_step+1:end,:,2) = phi(X) + 0.8*cos(gamma(Y)).*r_pin(X);
+    area_border(h_step+1:end,:,1) = theta(X) + 0.8*sin(gamma(Y)).*r_pin(X);
     %{
     for i=1:sz
         for j=1:steps
@@ -85,18 +85,24 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     end
     axis([0 2*pi 0 pi]);
     grid on;
-    %%}
-    
+    %}
     %now make the border area into a grid matrix;
-    border_grid = zeros(grid_row,grid_col);
+    border_grid = false(grid_row,grid_col);
+    %border_grid1 = border_grid;
+    %r_phi = ceil(area_border(1:steps,1:sz,2)/2/pi*grid_col);
+    %r_theta = ceil(area_border(1:steps,1:sz,1)/pi*grid_row);
+    %r_theta = reshape(r_theta,1,size(r_theta,1)*size(r_theta,2));
+    %r_phi = reshape(r_phi,1,size(r_phi,1)*size(r_phi,2));
+    %ray = [r_theta; r_phi];
+    %border_grid1(ray) = true;
     for i=1:sz
         for j=1:steps
             r_phi = ceil(area_border(j,i,2)/2/pi*grid_col);
             r_theta = ceil(area_border(j,i,1)/pi*grid_row);
-            border_grid(r_theta,r_phi) = 1;
+            border_grid(r_theta,r_phi) = true;
         end
     end
-    
+    %isequal(border_grid,border_grid1)
     sphere_area = border_grid;
 end
 

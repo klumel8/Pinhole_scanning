@@ -94,7 +94,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
             border_grid(r_theta,r_phi) = true;
         end
     end
-    sphere_area = border_grid;
+    sphere_area = border_grid(1:grid_row,1:grid_col);
 end
 
 %d = (pi/2) -acos(-[

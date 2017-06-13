@@ -69,7 +69,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %grid phi = row
     area_border(:,:,1) = round(area_border(:,:,1) / pi * grid_row)/grid_row*pi;
     area_border(:,:,2) = round(area_border(:,:,2) / 2 / pi * grid_col)/grid_col*2*pi;
-    %%{
+    %{
     hold on;
     for i=1:sz
         plot(area_border(:,i,2),area_border(:,i,1));

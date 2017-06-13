@@ -77,7 +77,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %grid phi = row
     area_border(:,:,1) = round(area_border(:,:,1) / pi * grid_row)/grid_row*pi;
     area_border(:,:,2) = round(area_border(:,:,2) / 2 / pi * grid_col)/grid_col*2*pi;
-    %%{
+    %{
     hold on;
     for i=1:sz
         plot(area_border(:,i,2),area_border(:,i,1));
@@ -89,8 +89,10 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     border_grid = false(grid_row,grid_col);
     for i=1:sz
         for j=1:steps
-            r_phi = ceil(area_border(j,i,2)/2/pi*grid_col);
-            r_theta = ceil(area_border(j,i,1)/pi*grid_row);
+            r_phi = floor(abs(area_border(j,i,2)/2/pi*grid_col) + 1);
+            r_theta = floor(abs(area_border(j,i,1)/pi*grid_row) + 1);
+            r_phi = r_phi + (r_phi < 0) *2*pi - (r_phi > 2*pi)*2*pi;
+            r_theta = r_theta + (r_theta < 0) * pi - (r_theta > pi)*pi;
             border_grid(r_theta,r_phi) = true;
         end
     end

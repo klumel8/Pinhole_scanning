@@ -91,8 +91,8 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
         for j=1:steps
             r_phi = floor(abs(area_border(j,i,2)/2/pi*grid_col) + 1);
             r_theta = floor(abs(area_border(j,i,1)/pi*grid_row) + 1);
-            r_phi = r_phi + (r_phi < 0) *2*pi - (r_phi > 2*pi)*2*pi;
-            r_theta = r_theta + (r_theta < 0) * pi - (r_theta > pi)*pi;
+            r_phi = round(r_phi + (r_phi < 0) *2*pi - (r_phi > 2*pi)*2*pi);
+            r_theta = round(r_theta + (r_theta < 0) * pi - (r_theta > pi)*pi);
             border_grid(r_theta,r_phi) = true;
         end
     end

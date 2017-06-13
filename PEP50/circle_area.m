@@ -30,16 +30,16 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %calculating the borders. we take 12 as a estimate to make sure we hit
     %all the grids.
     %determine the angles of the surface vector
-    pin_phi = hit_pin(4,:);
-    pin_theta = hit_pin(5,:);
-    
-    lengte = sqrt([hit_pin(1,:).^2 + hit_pin(2,:).^2 + hit_pin(3,:).^2]);
-    delta_phi   = (phi - pin_phi) - pi;
-    delta_theta = (theta - pin_theta) - pi;
-    
-    %determine the width of the pinholes
-    r_pin = hit_pin(6,:);
-    r_pin = atan(r_pin./lengte);
+    pin_phi = hit_pin(4,:)';
+    pin_theta = hit_pin(5,:)';
+    r_pin = hit_pin(6,:)';
+    lengte = sqrt([hit_pin(1,:)'.^2 + hit_pin(2,:)'.^2 + hit_pin(3,:)'.^2]);
+    mess1 = -1.*[hit_pin(1,:)'./lengte , hit_pin(2,:)'./lengte, hit_pin(3,:)'./lengte];
+    mess2 = [cos(pin_phi).*sin(pin_theta), sin(pin_phi).*sin(pin_theta), cos(pin_theta)]; 
+    angle = acos((mess1(:,1).*mess2(:,1)+mess1(:,2).*mess2(:,2)+mess1(:,3).*mess2(:,3)));
+    r_pin =(r_pin.*abs(sin(pi/2 - angle))./(lengte + r_pin.*abs(cos(pi/2-angle))));
+    r_pin = r_pin';
+    r_pin = atan(r_pin);
     
     %maak het aantal stappen moet overlegd worden
     steps = 100;
@@ -49,18 +49,10 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     %begin making the area that is been seen by  the pinhole
     area_border = zeros(steps, sz, 2);
     [X,Y] = meshgrid(1:sz,1:h_step);
-    [phi_m,~] = meshgrid(cos(delta_phi),1:h_step);
-    [theta_m,~] = meshgrid(cos(delta_theta),1:h_step);
     area_border(1:h_step,:,2) = phi(X) + cos(gamma(Y)).*r_pin(X);
     area_border(1:h_step,:,1) = theta(X) + sin(gamma(Y)).*r_pin(X);
     area_border(h_step+1:end,:,2) = phi(X) + 0.8*cos(gamma(Y)).*r_pin(X);
     area_border(h_step+1:end,:,1) = theta(X) + 0.8*sin(gamma(Y)).*r_pin(X);
-    
-    %add the scaling factors
-    area_border(1:h_step,:,2) = area_border(1:h_step,:,2).*phi_m;
-    area_border(h_step+1:end,:,2) = area_border(h_step+1:end,:,2).*phi_m;
-    area_border(1:h_step,:,1) = area_border(1:h_step,:,1).*theta_m;
-    area_border(h_step+1:end,:,1) = area_border(h_step+1:end,:,1).*theta_m;
     
     %{
     for i=1:sz

@@ -30,11 +30,8 @@ for i=1:c(3)
 end
 %}
 
-%function [gridcir,weight]=CircleGrid(gridrow,gridcol)
-clear all
+function [gridcir]=CircleGrid(gridrow,gridcol)
 
-gridrow = 129;
-gridcol = 256;
 
 rowleng=1.*pi/gridrow;
 colleng=2.*pi/gridcol;
@@ -77,8 +74,9 @@ for i = 1:gridcol
     % gridcir(:,:,i)=gridcir(:,:,i)/sum(sum(gridcir(:,:,i)));
 end
  gridcir = permute(gridcir,[3,2,1]);
+end
 %close(h);
-weight=weight/sum(weight);
+%weight=weight/sum(weight);
 %no equatior, is not necessary. already covered by the other squares so
 %long as grid is fine enough.
 %

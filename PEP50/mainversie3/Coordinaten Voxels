@@ -1,0 +1,29 @@
+%voxel coordinaten Geeft de coordinaten van de voxels  terug 
+
+clear all
+% the rows is de y index van 
+% the colums is de x index 
+% the 3d component is the z index
+Lx = 25; Ly = 25; Lz = 80;              % Size of volume
+dx = 1; dy = 1; dz = 1;                 % Step size for voxels
+
+Nx = Lx/dx +1;
+Ny = Ly/dy +1;
+Nz = Lz/dz +1;
+quality = zeros(Nx,Ny,Nz);  
+voxels = zeros(Nx*Ny*Nz,4);
+xvox = (-Lx/2+(0:Nx-1)*dx);
+yvox = (-Ly/2+(0:Ny-1)*dy);
+zvox = (-Lz/2+(0:Nz-1)*dz);
+i = 0;
+for l=1:Nx;
+     for m=1:Ny;
+      for k = 1:Nz;
+          i = i+ 1;
+       voxels(i,:) = [xvox(l),yvox(m),zvox(k),0];       
+
+      end    
+     end
+end
+
+clear i k m l

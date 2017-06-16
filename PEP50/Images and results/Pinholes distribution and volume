@@ -1,0 +1,25 @@
+% This program draws the pinholes and the volume that is going to be
+% checked
+origin = [0 0 0 ];     
+size = 25;   % Set the size of the volume checked
+x=([0 1 1 0 0 0;1 1 0 0 1 1;1 1 0 0 1 1;0 1 1 0 0 0]-0.5)*size+origin(1);
+y=([0 0 1 1 0 0;0 1 1 0 0 0;0 1 1 0 1 1;0 0 1 1 1 1]-0.5)*size+origin(2);
+z=([0 0 0 0 0 1;0 0 0 0 0 1;1 1 1 1 0 1;1 1 1 1 0 1]-0.5)*4*size+origin(3);
+for i=1:6
+    h=patch(x(:,i),y(:,i),z(:,i),'w');              %draws the volume
+    set(h,'edgecolor','k')
+end
+hold on
+load('pinholes')
+pinholes = [x,y,z,phi,-theta,0.5*d, alpha] ;
+M = pinholes;
+
+quiver3(M(1:75,1),M(1:75,2),M(1:75,3),cos(M(1:75,4))..                %
+.*sin(M(1:75,5)),sin(M(1:75,4)).*sin(M(1:75,5)),cos(M(1:75,5)),'b');  % draws the pinholes
+hold on 
+axis([-size size -size size -2*size 2*size])
+
+xlabel('x-axis(mm)')
+ylabel('y-axis(mm)')
+zlabel('z-axis(mm)')
+title('Pinhole distribution')

@@ -1,0 +1,28 @@
+Lx = 25;
+Ly = 25;
+Lz = 80; 
+phantom_size = [Lx Ly Lz];
+R_transaxial = 7;                       %raidus of spiral
+N_Pos_rev = 4.5;                        %number of steps per revolution of spiral
+N_Pos_tot = 25;                         %total number of steps
+[u,v,w] = Bed_Pos_plane(phantom_size,R_transaxial,N_Pos_rev,N_Pos_tot);
+scannerPositions = vertcat(u, v, w)';
+
+transpin = zeros(75*length(scannerPositions),7);
+load('pinholes.mat');
+scanning_input = [x y z phi -theta 0.5*d alpha];
+
+pinholes = scanning_input;
+for i = 1:length(scannerPositions);
+    
+    transpin(75*(i-1)+1:75*i,1) = pinholes(:,1) + scannerPositions(i,1);
+    transpin(75*(i-1)+1:75*i,2) = pinholes(:,2) + scannerPositions(i,2);
+    transpin(75*(i-1)+1:75*i,3) = pinholes(:,3) + scannerPositions(i,3);
+    transpin(75*(i-1)+1:75*i,4:7) = pinholes(:,4:7) ;
+ hold on
+    M = transpin(75*(i-1)+1:75*i,:);
+axis([-50 50 -50 50 -100 100])
+quiver3(M(1:75,1),M(1:75,2),M(1:75,3),cos(M(1:75,4))...              %
+.*sin(M(1:75,5)),sin(M(1:75,4)).*sin(M(1:75,5)),cos(M(1:75,5)));  % draws the pinholes
+
+end

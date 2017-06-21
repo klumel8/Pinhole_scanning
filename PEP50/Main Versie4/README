@@ -1,0 +1,14 @@
+Deze vesie is bedoeld om te kunnen werken met het cluster, hiervoor is een PARFOR loop aangebracht in de Overhead; 
+Haal deze eruit voor eigen gebruikt.
+
+Ten behoeve van optimalisatie wordt ook maar een 100ste deel van de totale cirkels genomen per division 
+Aangezien het aantal divisions zo groot is en gebruik wordt gemaakt van een dusdanig hoge kwaliteit, maakt dit niets uit. 
+
+Een mogelijke verbetering is om binnen de Main, de forloop die gebruikt wordt om door de verschillende voxels te gaan, ...
+in de Intersections code te zetten. Op deze manier hoeft de grote circlegrid niet elke keer te worden verstuurd. 
+Deze heeft immers een grootte van enkele Gigabite; het versturen hiervan voor elke voxel, voor elke diviosion (een paar duizend tot...
+miljoen keer dus) is niet ideaal!
+
+Verdere toevoegingen en verbeteringen kunnen hier worden toegevoegd, ik kijk ernaar uit!
+
+And remember,the cake is a lie: http://www.theuselessweb.com/

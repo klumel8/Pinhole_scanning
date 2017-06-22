@@ -11,17 +11,17 @@ function [ in  ] = pinhole_scanning_1voxel( pinholes, voxel_cor )
 %creating cones section
 %Matrix M (position vector cone, angle vector cone, maximum angle)
 %for x y z phi theta radius alpha
-
     M = pinholes;
     C= zeros(size(M));
+%{
     C(:,1:3) = M(:,1:3) - (M(:,6)./tan(M(:,7))).*[cos(M(:,4)).*sin(M(:,5)) sin(M(:,4)).*sin(M(:,5)) cos(M(:,5))];
     C(:,4:end) =M(:,4:end);
-    %{
+%}    
 for i = 1:size(M,1)
 C(i,1:3) = M(i,1:3) - (M(i,6)./tan(M(i,7))).*[cos(M(i,4)).*sin(M(i,5)) sin(M(i,4)).*sin(M(i,5)) cos(M(i,5))];
 C(i,4:end) = M(i,4:end);
 end
-    %}
+    
     %%
     
     %checking if point is inside cone(s)

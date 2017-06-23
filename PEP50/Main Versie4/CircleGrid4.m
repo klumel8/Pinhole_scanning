@@ -4,11 +4,11 @@ function [gridcir]=CircleGrid4(gridrow,gridcol,part)
 rowleng=1.*pi/gridrow;
 colleng=2.*pi/gridcol;
 
-large = 0 
+large = 0; 
 numberSteps = max(gridrow,gridcol)*15;
 dg = 2*pi/numberSteps;
 numberCircles = gridcol*((gridrow-1)/2+1);
-gridcir=false(gridcol,gridrow,floor(numberCircles/part(2))/(1+large)); %devide by 100 for large res
+gridcir=false(gridcol,gridrow,floor(floor(numberCircles/part(2))/(1+large))); %devide by 100 for large res
 a = floor(numberCircles*(part(1)-1)/part(2))+1;
 start = a-1;
 final = floor(numberCircles*part(1)/part(2))
@@ -24,7 +24,7 @@ tm = 1/2*pi/gridrow + j*pi/gridrow;
 All = meshgrid(pm,tm);
         
 
-for k = a:floor(final-a)/(1+large)+a %devide by 100
+for k = a:floor(floor(final-a)/(1+large))+a %devide by 100
     %weight(a)=cos(tm);%(2*pi./gridcol*(cos(tm-pi/(gridrow-1)/2)-cos(tm+pi/(gridrow-1)/2))/(4*pi));
     %{
     if mod(k,1000) == 0

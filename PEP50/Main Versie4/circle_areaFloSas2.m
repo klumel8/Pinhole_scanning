@@ -8,7 +8,7 @@
 
 
 function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
-    close all
+    %close all
     %we nemen de unitsphere als een bol met straal 1mm.
     %en xyz ook in mm. de eerste colom van hit_pin bevat allen de xyz van de geraakte voxel
 
@@ -53,17 +53,20 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     [Theta,~] = meshgrid(thetaC,gamma);
     [R_pin,~] = meshgrid(r_pin,gamma);
     
+    phiC = phiC-pi;
+    thetaC = -(thetaC+pi/2);
     
     Phim = Phi-pi;
     Thetam = -(Theta + pi/2);
-    pos = ones(h_step,sz,3);
-    pos(1:h_step,:,1) = R_pin.*((cos(Gamma).*sin(Thetam).*cos(Phim)-sin(Gamma).*sin(Phim)));
-    pos(1:h_step,:,2) = R_pin.*(cos(Gamma).*sin(Thetam).*sin(Phim)+sin(Gamma).*cos(Phim));
-    pos(1:h_step,:,3) = R_pin.*cos(Gamma).*cos(Thetam);
+    pos = ones(h_step,sz,3);                          
+        
+    pos(1:h_step,:,1) = R_pin.*((cos(Gamma).*sin(Thetam).*cos(Phim)-sin(Gamma).*sin(Phim)))+cos(Phi).*sin(Theta);
+    pos(1:h_step,:,2) = R_pin.*(cos(Gamma).*sin(Thetam).*sin(Phim)+sin(Gamma).*cos(Phim))+sin(Phi).*sin(Theta);
+    pos(1:h_step,:,3) = R_pin.*cos(Gamma).*cos(Thetam)+cos(Theta);
     
-    pos(1:h_step,:,1) = pos(1:h_step,:,1)+cos(Phi).*sin(Theta);                      
-    pos(1:h_step,:,2) = pos(1:h_step,:,2)+sin(Phi).*sin(Theta);
-    pos(1:h_step,:,3) = pos(1:h_step,:,3)+cos(Theta);
+    %pos(1:h_step,:,1) = pos(1:h_step,:,1)+cos(Phi).*sin(Theta);                      
+    %pos(1:h_step,:,2) = pos(1:h_step,:,2)+sin(Phi).*sin(Theta);
+    %pos(1:h_step,:,3) = pos(1:h_step,:,3)+cos(Theta);
     
     %plot3(pos(1:h_step,:,1),pos(1:h_step,:,2),pos(1:h_step,3));
     
@@ -85,7 +88,7 @@ function sphere_area = circle_area(hit_pin_xyz, grid_col, grid_row)
     
     %row = niet x2
     %grid phi = row
-    figure
+    %figure
     %plot(area_border(1:h_step,:,2),area_border(1:h_step,:,1),'.');
     
     %{

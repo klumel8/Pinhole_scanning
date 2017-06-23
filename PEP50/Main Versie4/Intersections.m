@@ -1,9 +1,13 @@
 function [qualitySas] = Intersections(gridrow,gridcol,voxelCoords,circles,translatedScanning)
 
 qualitySas = zeros(1,size(voxelCoords,1));
+disp(size(voxelCoords,1));
+time = zeros(size(voxelCoords,1),1);
+
 for i = 1:size(voxelCoords,1)
+    tic
     voxelCoor = voxelCoords(i,1:3);
-    singleVoxelPinholes = pinhole_scanning_1voxel(translatedScanning, voxelCoor);
+    singleVoxelPinholes = v2pinhole_scanning_1voxel(translatedScanning, voxelCoor);
     voxelGrid = circle_areaFloSas2(singleVoxelPinholes,gridrow,gridcol);
 
 %%Sasha
@@ -12,7 +16,9 @@ for i = 1:size(voxelCoords,1)
     voxelIntersect = any(voxelIntersect,1);
     voxelIntersect = any(voxelIntersect,2);
     qualitySas(i) = sum(voxelIntersect)/size(voxelIntersect,3);
-
+    time(i) = toc;
+    ETA_Intersect = (size(voxelCoords,1) - i)*mean(time(1:i))/60;
+    disp(ETA_Intersect);
 end
 %%Floris
 

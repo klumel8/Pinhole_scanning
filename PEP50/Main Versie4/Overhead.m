@@ -1,68 +1,61 @@
 clear all
 
-Lx = 1 
-Ly = 25
-Lz = 80
-dx = 1
-dy = 1
-dz = 1
+Lx = 1; Ly = 25; Lz = 80 %define the size(mm) of the area youre looking at (around the origin).
+
+dx = 1; dy = 1; dz = 1;  %define the size(mm) of each voxel in the x,y,z, directions.
+
 R_transaxial = 7
 N_Pos_rev = 4.5
 N_Pos_tot = 15
 
-gridrow = input('Enter the gridrow'); %501
-gridcol = input('Enter the gridcol'); %1000
+%give the grid resolution as input.
+gridrow = input('Enter the gridrow');
+gridcol = input('Enter the gridcol');
+
+%Make divisions to split up the calculations and allow for bigger calculations.
 division = input('Enter the division');
 
-
-%{
-gridrow
-gridcol
-division
-
-parpool('local', 10)
-%}
-
-%{
-gridrow = 1001;
-gridcol = 2000;
-
-Lx = 1; Ly = 1; Lz = 1;
-dx = 1; dy = 1; dz = 1;
-R_transaxial = 1;
-N_Pos_rev = 20;
-N_Pos_tot = 80;
-%}
-
+%load all the pinhole data, returns: x, y, z, phi, theta, d, alpha.
 load('pinholes.mat');
+
+%A dummy variable that will shorten the code later on.
 scanning_input = [x y z phi -theta 0.5*d alpha];
 
-%continuBeweging = false;   
-
+%Add the translated coordinates to the pinhole coordinates.
 translatedScanning = all_pinholepositions([Lx,Ly,Lz], R_transaxial,N_Pos_rev,N_Pos_tot,scanning_input);
-%translatedScanning = scanning_input;
 
+%VoxelCoords is a matrix of containing the [x y z] of each voxel inside the area.
 voxelCoords = Voxel_coordinates(Lx,Ly,Lz,dx,dy,dz);
-%voxelCoords = [0 0 0];
 
+%Pre-Allocate an array for the ETA function.
 time = zeros(1,division);
 
+%Pre-Allocate a matrix to determine the quality later on.
 partQuality = zeros(size(voxelCoords,1),division);
+
+%Loop through all calculations.
 for go = 1:division
-    %tic21
-    disp(go/division)
-    disp('Entering Next division interation')
+    %start the tic for the ETA function
+    if ETA
+        tic
+    end
+    
+    %Display go/division, this gives a rough estimation of the progress.
+    disp(go/division);
+    disp('Entering Next division interation');
+    
+    %part is the current division of the total division.
     part = [go division];
+    
+    %calculate the quality for the division.
     partQuality(:,go) = Main(gridrow, gridcol, translatedScanning, voxelCoords, part);
-    %partQuality(:,go);
-    %time(1,go) = toc;
-    %avg = mean(time(time~=0));
-    %ETA_Overhead = (size(voxelCoords,1) - go)*avg/60;
-    %fprintf("ETA_Overhead: %f",ETA_Overhead);
+    
+    %The estimated time until completion function (minutes
+    if ETA
+        time(1,go) = toc; avg = mean(time(time~=0)); ETA_Overhead = (size(voxelCoords,1) - go)*avg/60;
+        fprintf("ETA_Overhead: %f minutes and %f seconds",floor(ETA_Overhead),round((ETA_Overhead-floor(ETA_Overhead))*60));
+    end
     
 end
 quality = mean(partQuality,2);
-quality = reshape(quality,[Lz/dz,Ly/dy])';
-%save('quality',quality)
-%colormap('gray');
-%imagesc(quality);
+quality = reshape(quality,[Lz/dz,Ly/dy])'

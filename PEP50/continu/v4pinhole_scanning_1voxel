@@ -1,0 +1,15 @@
+function [p] = v4pinhole_scanning_1voxel( Lx,Ly,Lz, R_transaxial, N_Pos_rev,N_Pos_tot,scanning_input,Voxel) 
+%UNTITLED5 Summary of this function goes here
+%   Detailed explanation goes here
+
+N_pin = size(scanning_input,1);
+translatedScanning = all_pinholepositions([Lx,Ly,Lz], R_transaxial,N_Pos_rev,N_Pos_tot,scanning_input);
+p = zeros(7,N_pin+1, N_Pos_tot);
+P(1:3,1,1) = Voxel';
+
+for k = 0:(size(translatedScanning,1)/N_pin - 1)
+     p(1:3,1,k+1) = P(1:3,1,1);
+     u = (v3pinhole_scanning_1voxel(translatedScanning((k*75+1:(k+1)*75),:), Voxel));
+     p(:,2:end,k+1) = u(:,2:end);
+end  
+end

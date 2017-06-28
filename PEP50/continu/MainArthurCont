@@ -1,0 +1,14 @@
+
+Lx = 1 
+Ly = 20
+Lz = 20
+dx = 1
+dy = 0.5
+dz = 0.5
+R_transaxial = 7
+N_Pos_rev = 4.5
+N_Pos_tot = 25
+Voxel = [-200 200 200]
+scanning_input = [x y z phi -theta 0.5*d alpha]
+
+v4pinhole_scanning_1voxel( Lx,Ly,Lz, R_transaxial, N_Pos_rev,N_Pos_tot,scanning_input,Voxel)

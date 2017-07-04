@@ -41,11 +41,21 @@ N_Pos_tot = 80;
 load('pinholes.mat');
 scanning_input = [x y z phi -theta zeros(size(theta)) alpha]; %%RADIUS = 0  instead of 0.5*d
 
+continuBeweging = true
 %continuBeweging = false;   
 
-%translatedScanning = all_pinholepositions([Lx,Ly,Lz], R_transaxial,N_Pos_rev,N_Pos_tot,scanning_input);
+if continueBeweging
+    layers = diff(scanning_input(:,3));
+    layers = size(layers(layers~=0),1)+1;
+    m = min(pi/gridrow,2*pi/gridcol)*size(scanning_input,1)/layers;
+    m = 2*pi/m;
+    N_Pos_rev = m;
+    N_Pos_tot = 5*m;
+end 
+
+translatedScanning = all_pinholepositions([Lx,Ly,Lz], R_transaxial,N_Pos_rev,N_Pos_tot,scanning_input);
 %quiver3(translatedScanning(:,1),translatedScanning(:,2),translatedScanning(:,3),sin(translatedScanning(:,5)).*cos(translatedScanning(:,4)),sin(translatedScanning(:,5)).*sin(translatedScanning(:,4)),cos(translatedScanning(:,5)))
-translatedScanning = scanning_input;
+%translatedScanning = scanning_input;
 
 voxelCoords = Voxel_coordinates(Lx,Ly,Lz,dx,dy,dz);
 %voxelCoords = [0 0 0];
